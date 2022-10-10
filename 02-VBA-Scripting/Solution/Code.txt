@@ -1,0 +1,168 @@
+Sub stocktsting()
+
+    Dim ws As Worksheet
+    
+    For Each ws In ThisWorkbook.Worksheets
+    
+
+
+
+    ws.Cells(1, 9).Value = "Ticker"
+    ws.Columns(9).AutoFit
+    ws.Cells(1, 10).Value = "Yearly Change"
+    ws.Columns(10).AutoFit
+    ws.Cells(1, 11).Value = "Percent Change"
+    ws.Columns(11).AutoFit
+    ws.Cells(1, 12).Value = "Total Stock Volume"
+    ws.Columns(12).AutoFit
+    ws.Cells(1, 16).Value = "Ticker"
+    ws.Columns(16).AutoFit
+    ws.Cells(1, 17).Value = "value"
+    ws.Columns(17).AutoFit
+    ws.Cells(2, 15).Value = "Greatest % Increase"
+    ws.Columns(15).AutoFit
+    ws.Cells(3, 15).Value = "Greatest % Decrease"
+    ws.Cells(4, 15).Value = "Greatest Total Volume"
+    
+
+
+
+    'set an initial variable for holding the stock name
+    Dim stockname As String
+    
+    'set yearly change
+    Dim yearly_change As Double
+    yearly_chagne = 0
+    
+    'set percent change
+    Dim percentchange As Double
+    percentchange = 0
+            
+    
+    'set an initial variable for holding the total per stock
+    Dim total_vol As Double
+    total_vol = 0
+    
+    'keep track of the location for each stock in the table
+    Dim summar_table_row As Integer
+    summar_table_row = 2
+    
+    Dim closingprice As Double
+    closingprice = 0
+    
+    Dim openingprice As Double
+    openingprice = ws.Cells(2, 3).Value
+    
+    Dim rowcount As Double
+    rowcount = ws.Cells(Rows.Count, "A").End(xlUp).Row
+    
+    
+       
+    
+    'loop throught all
+    For i = 2 To rowcount
+    
+    
+        'check of we are still within the same stock, of we are not...
+        If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+        
+                        
+            'set the stock name
+            stockname = ws.Cells(i, 1).Value
+        
+            'add to the volime
+            total_vol = total_vol + ws.Cells(i, 7).Value
+            
+            'get the closing price
+            closingprice = ws.Cells(i, 6).Value
+            
+                        
+            'get the yearly change
+            yearly_change = closingprice - openingprice
+            
+                        
+            'get the percent change
+            percentchange = (closingprice - openingprice) / openingprice
+                        
+            
+            'write out to summary table
+            ws.Cells(summar_table_row, 9).Value = stockname
+            ws.Cells(summar_table_row, 10).Value = yearly_change
+            ws.Cells(summar_table_row, 11).Value = percentchange
+            ws.Cells(summar_table_row, 11).NumberFormat = "0.00%"
+            ws.Cells(summar_table_row, 12).Value = total_vol
+            
+            
+            If (yearly_change > 0) Then
+                ws.Cells(summar_table_row, 10).Interior.ColorIndex = 4
+            Else
+                ws.Cells(summar_table_row, 10).Interior.ColorIndex = 3
+            End If
+            
+            'resets
+            summar_table_row = summar_table_row + 1
+            total_vol = 0
+            
+            openingprice = ws.Cells(i + 1, 3).Value
+            
+            
+            
+            
+        Else
+            ' add to the colume
+            total_vol = total_vol + ws.Cells(i, 7).Value
+        End If
+     
+     Next i
+     
+     'Bonus
+     Dim j As Integer
+     Dim volticker As String
+     Dim maxpric As Double
+     Dim minpric As Double
+     Dim max_vol As Double
+     
+     Dim Max_ticker As String
+     Dim Min_ticker As String
+         
+     
+     max_vol = 0
+     maxpric = -999999999999#
+     minpric = 9999999999999#
+     
+     For j = 2 To summar_table_row - 1
+        If ws.Cells(j, 12).Value > max_vol Then
+            max_vol = ws.Cells(j, 12).Value
+            volticker = ws.Cells(j, 9).Value
+        End If
+        
+        If ws.Cells(j, 11).Value > maxpric Then
+            maxpric = ws.Cells(j, 11).Value
+            Max_ticker = ws.Cells(j, 9).Value
+        End If
+        
+        If ws.Cells(j, 11).Value < minpric Then
+            minpric = ws.Cells(j, 11).Value
+            Min_ticker = ws.Cells(j, 9).Value
+        End If
+        
+        
+
+     Next j
+    
+   
+     ws.Cells(4, 16).Value = volticker
+     ws.Cells(2, 17).Value = maxpric
+     ws.Cells(2, 17).AutoFit
+     ws.Cells(2, 17).NumberFormat = "0.00%"
+     ws.Cells(3, 17).Value = minpric
+     ws.Cells(3, 17).NumberFormat = "0.00%"
+     ws.Cells(4, 17).Value = max_vol
+     ws.Cells(2, 16).Value = Max_ticker
+     ws.Cells(3, 16).Value = Min_ticker
+    
+    
+   
+    Next ws
+    
+End Sub
