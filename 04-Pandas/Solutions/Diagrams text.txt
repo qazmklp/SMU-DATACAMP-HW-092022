@@ -1,0 +1,44 @@
+departments
+-
+dept_no varchar(10) PK
+dept_name" varchar(100)   NOT NULL,
+last_updated timestamp 
+
+dept_emp
+-
+id serial PK
+emp_no int FK >- employees.emp_no
+dept_no varchar(10) FK >- departments.dept_no
+last_updated timestamp
+
+dept_manager
+-
+id serial PK
+dept_no varchar(10) FK >- departments.dept_no
+emp_no int FK >- employees.emp_no
+last_updated timestamp
+
+
+employees
+-
+emp_no int PK
+emp_title_id varchar(10) FK >- titles.title_id
+birth_date date
+first_name varchar(100)
+last_name varchar(100)
+sex varchar(50)
+hire_date date
+last_update timestamp
+
+titles
+-
+title_id varchar(50) PK
+title varchar(100)
+
+salaries
+-
+id serial PK
+emp_no int FK >- employees.emp_no
+salary float
+last_updated timestamp
+
